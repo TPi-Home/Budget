@@ -37,7 +37,7 @@ namespace BudgetSpreadsheet
                         FinalizeCurrentSheet(workbookFileName);
                         break;
                     case "3":
-                        Console.WriteLine("Opening README/TUTORIAL.");
+                        ReadMe();
                         break;
                     case "4":
                         Console.WriteLine("Closing.");
@@ -57,6 +57,13 @@ namespace BudgetSpreadsheet
                 choice = Console.ReadLine();
             }
 
+        }
+
+        static void ReadMe()
+        {
+            Console.WriteLine("*This software gathers information from the user and builds a spreadsheet based off that information.\n*This is the style of spreadsheet I have used to track my expenses/budget over the last couple years.\n*While I have been content with this model for my personal use, I do believe there will be more to come as I clean it up some.\n*Long term features in the pipeline: " +
+                "\n*More specific information surrounding rent/mortgage\n*Possibly some functionality to chart information relevant to a budget\n*Taxes and figures with taxes factored in\n*More details surrounding subscription costs and how they add up\n*Capital gains or 1099 income, as well as more quality of life for w2 tracking\n*more detailed debt tracking\n*Reminders for tax season (healthcare.gov tax credit, forms" +
+                "popping up to remind you to file that part with the rest of your taxes)\n*Please report bugs directly to me if you know me\n \n \n \n Copyright 2024 Tyler Pittman\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. ");
         }
         /*static void CreateTemplate(string workbookFileName) //It seems as if one function is better for both creation and merging because it means I don't have to pass around a dictionary
         {
@@ -158,7 +165,7 @@ namespace BudgetSpreadsheet
 
                 int lastRow = currentSheet.LastRowUsed().RowNumber();
 
-                bool hasCompletedSection = true;
+               /* bool hasCompletedSection = true;
                 for (int row = 1; row <= lastRow; row++)
                 {
                     var cellA = currentSheet.Cell(row, 1);
@@ -171,7 +178,7 @@ namespace BudgetSpreadsheet
                 }
                 //FORMAT HEADERS SOMEWHERE IN HERE
                 if (hasCompletedSection)
-                {
+                {*/
                     Console.Write("Enter the month to use as the name of the sheet you're saving: ");
                     string newSheetName = Console.ReadLine().Trim();
 
@@ -194,11 +201,11 @@ namespace BudgetSpreadsheet
 
                     workbook.Save();
                     Console.WriteLine($"Current sheet finalized and a new sheet named '{newSheetName}' for data entry has been created.");
-                }
+                /*}
                 else
                 {
                     Console.WriteLine($"Current sheet does not have a completed section.");
-                }
+                }*/
             }
 
 
@@ -207,11 +214,11 @@ namespace BudgetSpreadsheet
         }
         static void AddBillsToCurrentSheet(string workbookFileName)
         {
-            if (!File.Exists(workbookFileName))
+            /*if (!File.Exists(workbookFileName))
             {
                 Console.WriteLine($"No workbook file found for the current year.");
                 return;
-            }
+            }*/
             var existingBills = new Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>();
             var bills = new List<(string billName, decimal amount, bool isSplit, int week, string autopayStatus)>();
             using (var workbook = new XLWorkbook(workbookFileName))
