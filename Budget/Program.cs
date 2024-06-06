@@ -10,43 +10,36 @@ namespace BudgetSpreadsheet
 {
     class Program
     {
-        
-
         static void Main(string[] args)
         {
             string currentYear = DateTime.Now.ToString("yyyy");
             string workbookFileName = $"{currentYear}.xlsx";
-            var savedexistingBills = new Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>();
+
             // Initial Menu
             Console.WriteLine("What do you want to do?");
-            Console.WriteLine("1. Create a new workbook template. (This makes the master file for a year. Generally for first time users. \n" +
-                " If you depend on a filled out sheet in this application's root directory, back it up before using this option.)");
-            Console.WriteLine("2. Add bills to an existing worksheet. (A sheet is like a child file in Excel. One .xlsx file can have many sheets.");
-            Console.WriteLine("3. Finalize the current sheet and start a new sheet for data entry");
-            Console.WriteLine("4. Open README/TUTORIAL.");
-            Console.WriteLine("5. Exit.");
-            Console.Write("Enter your choice (1, 2, 3, 4, or 5): ");
+            Console.WriteLine("1. Create a template or add/merge in bills to an existing worksheet.");
+            Console.WriteLine("2. Finalize the current sheet and start a new sheet for data entry.");
+            Console.WriteLine("3. Open README/TUTORIAL.");
+            Console.WriteLine("4. Exit.");
+            Console.Write("Enter your choice (1, 2, 3, or 4): ");
             string choice = Console.ReadLine();
-            while (choice != "5")
+            while (choice != "4")
             {
                 switch (choice)
                 {
                     case "1":
                         // Create a new template workbook
-                        CreateTemplate(workbookFileName, savedexistingBills);
-                        break;
-                    case "2":
                         // Add bills to an existing workbook
+                        // CreateTemplate(workbookFileName);
                         AddBillsToCurrentSheet(workbookFileName);
                         break;
-                    case "3":
-                        // Finalize the current sheet into a sheet with the amount towards bills paid and start a new sheet for data entry
+                    case "2":
                         FinalizeCurrentSheet(workbookFileName);
                         break;
-                    case "4":
+                    case "3":
                         Console.WriteLine("Opening README/TUTORIAL.");
                         break;
-                    case "5":
+                    case "4":
                         Console.WriteLine("Closing.");
                         break;
                     default:
@@ -54,20 +47,18 @@ namespace BudgetSpreadsheet
                         break;
                 }
                 Console.WriteLine("What do you want to do?");
-                Console.WriteLine("1. Create a new workbook template. (This makes the master file for a year. Generally for first time users. \n" +
-                " If you depend on a filled out sheet in this application's root directory, back it up before using this option.)");
-                Console.WriteLine("2. Add bills to an existing worksheet. (A sheet is like a child file in Excel. One .xlsx file can have many sheets.");
-                Console.WriteLine("3. Finalize the current sheet and start a new sheet for data entry.");
-                Console.WriteLine("4. Open README/TUTORIAL.");
-                Console.WriteLine("5. Exit.");
-                Console.Write("Enter your choice (1, 2, 3, 4, or 5): ");
+                Console.WriteLine("1. Create a template or add/merge in bills to an existing worksheet.");
+                Console.WriteLine("2. Finalize the current sheet and start a new sheet for data entry.");
+                Console.WriteLine("3. Open README/TUTORIAL.");
+                Console.WriteLine("4. Exit.");
+                Console.Write("Enter your choice (1, 2, 3, or 4): ");
 
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
                 choice = Console.ReadLine();
             }
 
         }
-        static void CreateTemplate(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>savedexistingBills)
+        /*static void CreateTemplate(string workbookFileName) //It seems as if one function is better for both creation and merging because it means I don't have to pass around a dictionary
         {
             using (var workbook = new XLWorkbook())
             {
@@ -152,7 +143,7 @@ namespace BudgetSpreadsheet
                 workbook.SaveAs(workbookFileName);
                 Console.WriteLine($"Template file created at {workbookFileName}");
             }
-        }
+        }*/
         static void FinalizeCurrentSheet(string workbookFileName)
         {
             using (var workbook = new XLWorkbook(workbookFileName))
@@ -288,7 +279,7 @@ namespace BudgetSpreadsheet
                 worksheet.Cell("G1").Value = "Autopay Status";
                 worksheet.Cell("H1").Value = "Paid Boolean";
                 worksheet.Cell("I1").Value = "Amount Paid";
-                //probably bad and inefficient logic using placeholders in the wrong cell because I have brain worms
+                //probably bad logic
                 int currentRow = 2;
                 for (int week = 1; week <= 4; week++)
                 {
@@ -327,6 +318,7 @@ namespace BudgetSpreadsheet
 
                 workbook.Save();
                 Console.WriteLine("New bills added to the current worksheet.");
+                //IF YOU GOT TO THE END OF THIS, MY HANDS HURT
             }
         }
     }
