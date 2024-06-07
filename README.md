@@ -2,12 +2,14 @@
 **********************************************************************
 Included is the software I am building to automate my budget spreadsheets. Included is a template of the spreadsheet I am modeling this after.
 **********************************************************************
-GPL License Information:
-
-Copyright 2024, Ya Boi
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+Features Pending:<br />
+*Finishing total cells/formulas on the bottom<br />
+*Simple graphical user interface<br />
+*Adding tax and adjusting totals to account for that, further helping the user better itemize their expenses<br />
+*A seperate sheet for income<br />
+*Different options for rent and mortgage<br />
+*Options for Insurance<br />
+*Options for different income types when the income sheet is more fleshed out<br />
+*Options for savings<br />
+*Reminders for tax season (eg healthcare.gov tax forms)<br />
+Please send any suggestions to me directly if you know me.
