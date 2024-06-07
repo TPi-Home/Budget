@@ -22,7 +22,6 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="ClosedXML_Excel" Version="1.0.0" />
-    <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.0.2" />
   </ItemGroup>
 
 </Project>

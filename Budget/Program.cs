@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using ClosedXML.Excel;
 
 namespace BudgetSpreadsheet
 {
@@ -15,31 +9,46 @@ namespace BudgetSpreadsheet
             string currentYear = DateTime.Now.ToString("yyyy");
             string workbookFileName = $"{currentYear}.xlsx";
 
+            var existingBills = new Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>();
+
             // Initial Menu
             Console.WriteLine("What do you want to do?");
-            Console.WriteLine("1. Create a template or add/merge in bills to an existing worksheet.");
-            Console.WriteLine("2. Finalize the current sheet and start a new sheet for data entry.");
-            Console.WriteLine("3. Open README/TUTORIAL.");
-            Console.WriteLine("4. Exit.");
-            Console.Write("Enter your choice (1, 2, 3, or 4): ");
+            Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
+            Console.WriteLine("2. Add and merge bills into an existing worksheet.");
+            Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");
+            Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
+            Console.WriteLine("5. Open tutorial.");
+            Console.WriteLine("6. Open README.");
+            Console.WriteLine("7. Exit.");
+            Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
             string choice = Console.ReadLine();
-            while (choice != "4")
+            while (choice != "7")
             {
                 switch (choice)
                 {
                     case "1":
-                        // Create a new template workbook
-                        // Add bills to an existing workbook
-                        // CreateTemplate(workbookFileName);
-                        AddBillsToCurrentSheet(workbookFileName);
+                        //create blank file
+                        createBlank(workbookFileName, existingBills);
                         break;
                     case "2":
-                        FinalizeCurrentSheet(workbookFileName);
+                        //create a custom template sheet
+                        AddBillsToCurrentSheet(workbookFileName, existingBills);
                         break;
                     case "3":
-                        ReadMe();
+                        //add total formulas and final touchups; color code
+                        totals(workbookFileName);
                         break;
                     case "4":
+                        //finalize
+                        FinalizeCurrentSheet(workbookFileName, existingBills);
+                        break;
+                    case "5":
+                        tutorial();
+                        break;
+                    case "6":
+                        readMe();
+                        break;
+                    case "7":
                         Console.WriteLine("Closing.");
                         break;
                     default:
@@ -47,111 +56,139 @@ namespace BudgetSpreadsheet
                         break;
                 }
                 Console.WriteLine("What do you want to do?");
-                Console.WriteLine("1. Create a template or add/merge in bills to an existing worksheet.");
-                Console.WriteLine("2. Finalize the current sheet and start a new sheet for data entry.");
-                Console.WriteLine("3. Open README/TUTORIAL.");
-                Console.WriteLine("4. Exit.");
-                Console.Write("Enter your choice (1, 2, 3, or 4): ");
+                Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
+                Console.WriteLine("2. Add and merge bills into an existing worksheet.");//will be adding a remove option later
+                Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");
+                Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
+                Console.WriteLine("5. Open tutorial.");
+                Console.WriteLine("6. Open README.");
+                Console.WriteLine("7. Exit.");
+                Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
 
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
+                //add delete expensese, fix logic, handle exceptions
+                //check for open file
+                
                 choice = Console.ReadLine();
             }
 
         }
-
-        static void ReadMe()
-        {
-            Console.WriteLine("*This software gathers information from the user and builds a spreadsheet based off that information.\n*This is the style of spreadsheet I have used to track my expenses/budget over the last couple years.\n*While I have been content with this model for my personal use, I do believe there will be more to come as I clean it up some.\n*Long term features in the pipeline: " +
-                "\n*More specific information surrounding rent/mortgage\n*Possibly some functionality to chart information relevant to a budget\n*Taxes and figures with taxes factored in\n*More details surrounding subscription costs and how they add up\n*Capital gains or 1099 income, as well as more quality of life for w2 tracking\n*more detailed debt tracking\n*Reminders for tax season (healthcare.gov tax credit, forms" +
-                "popping up to remind you to file that part with the rest of your taxes)\n*Please report bugs directly to me if you know me\n \n \n \n Copyright 2024 Tyler Pittman\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. ");
-        }
-        /*static void CreateTemplate(string workbookFileName) //It seems as if one function is better for both creation and merging because it means I don't have to pass around a dictionary
+        static void createBlank(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
             using (var workbook = new XLWorkbook())
             {
+                int currentWeek = 0;
                 string[] args = null;
-                // Check for file in root directory
+                //check for file in root directory
                 if (File.Exists(workbookFileName))
                 {
                     Console.WriteLine($"You already have a Workbook for this year!");
                     return;
                 }
                 var worksheet = workbook.Worksheets.Add("Entry");
+                var currentSheet = workbook.Worksheets.First();
 
-                // Set up the headers
-                worksheet.Cell("A1").Value = "Bill Name";
-                worksheet.Cell("B1").Value = "Minimum Amount Owed";
-                worksheet.Cell("C1").Value = "Minimum Amount Due";
-                worksheet.Cell("D1").Value = "Due Date Week";
-                worksheet.Cell("E1").Value = "Transition Formula";
-                worksheet.Cell("F1").Value = "Latest Due Date";
-                worksheet.Cell("G1").Value = "Autopay Status";
-                worksheet.Cell("H1").Value = "Paid Boolean";
-                worksheet.Cell("I1").Value = "Amount Paid";
-
-                // Format the headers
-                var headerRange = worksheet.Range("A1:I1");
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
-                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
-                //Column width formatting
-                foreach (var column in worksheet.Columns())
-                {
-                    column.Width = 26;
-                }
-
-                List<(string billName, decimal amount, bool isSplit, int week, string autopayStatus)> bills = new List<(string, decimal, bool, int, string)>();
-                HashSet<int> addedWeeks = new HashSet<int>();
                 for (int week = 1; week <= 4; week++)
                 {
-                    if (!addedWeeks.Contains(week))
-                    {
-                        bills.Add(($"Week: {week}", 0, false, week, ""));
-                        addedWeeks.Add(week);
-                    }
-                    Console.Write($"How many bills do you have for week {week}? ");
+                    string weekString = $"Week {week}";
+                    Console.Write($"How many bills do you have for {weekString}? ");
                     int numberOfBills = int.Parse(Console.ReadLine());
 
                     for (int i = 0; i < numberOfBills; i++)
                     {
-                        Console.Write($"Enter the name of bill {i + 1} for week {week}: ");
+                        Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");
                         string billName = Console.ReadLine();
                         Console.Write($"Enter the amount for {billName}: ");
                         decimal amount = decimal.Parse(Console.ReadLine());
                         Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
-                        bool isSplit = Console.ReadLine().Trim().ToLower() == "yes";
+                        bool isSplit = Console.ReadLine().Trim().ToLower().StartsWith("y");
                         Console.Write($"Enter autopay status for {billName} (yes/no): ");
                         string autopayStatus = Console.ReadLine().Trim().ToLower();
-                        bills.Add((billName, amount, isSplit, week, autopayStatus));
+
+                        if (!existingBills.ContainsKey(week))
+                        {
+                            existingBills[week] = new List<(string billName, decimal amount, bool isSplit, string autopayStatus)>();
+                        }
+                        existingBills[week].Add((billName, amount, isSplit, autopayStatus));
                     }
                 }
 
-                int currentRow = 2; //Row 1 == headers
+                currentSheet.Clear();
 
-                foreach (var bill in bills)
+                //formatting
+                currentSheet.Cell("A1").Value = "Bill Name";
+                currentSheet.Cell("B1").Value = "Minimum Amount Owed";
+                currentSheet.Cell("C1").Value = "Minimum Amount Due";
+                currentSheet.Cell("D1").Value = "Due Date Week";
+                currentSheet.Cell("E1").Value = "Transition Formula";
+                currentSheet.Cell("F1").Value = "Latest Due Date";
+                currentSheet.Cell("G1").Value = "Autopay Status";
+                currentSheet.Cell("H1").Value = "Paid Boolean";
+                currentSheet.Cell("I1").Value = "Amount Paid";
+                //probably bad logic
+                int currentRow = 2;
+                for (int week = 1; week <= 4; week++)
                 {
-                    while (!worksheet.Cell(currentRow, 1).IsEmpty())
-                    {
-                        currentRow++;
-                    }
-
-                    worksheet.Cell(currentRow, 1).Value = bill.billName;
-                    worksheet.Cell(currentRow, 2).Value = bill.amount;
-                    worksheet.Cell(currentRow, 3).FormulaA1 = bill.isSplit ? $"B{currentRow}/2" : $"B{currentRow}";
-                    worksheet.Cell(currentRow, 4).Value = bill.week;
-                    worksheet.Cell(currentRow, 5).FormulaA1 = $"D{currentRow}-1";
-                    worksheet.Cell(currentRow, 6).FormulaA1 = $"IF(E{currentRow}=0,1,D{currentRow}*7-7)";
-                    worksheet.Cell(currentRow, 7).Value = bill.autopayStatus;
-                    worksheet.Cell(currentRow, 8).FormulaA1 = $"IF(I{currentRow}<>0,\"Y\",\"N\")";
-
+                    currentSheet.Cell(currentRow, 1).Value = $"Week {week}";
                     currentRow++;
+
+                    if (existingBills.ContainsKey(week))
+                    {
+                        foreach (var bill in existingBills[week])
+                        {
+                            currentSheet.Cell(currentRow, 1).Value = bill.billName;
+                            currentSheet.Cell(currentRow, 2).Value = bill.amount;
+                            if (bill.isSplit)
+                                currentSheet.Cell(currentRow, 3).FormulaA1 = $"=IF(H{currentRow}=\"Y\",IF(B{currentRow}/2-I{currentRow}<0,0,B{currentRow}/2-I{currentRow}),B{currentRow}/2)";
+                            else
+                                currentSheet.Cell(currentRow, 3).FormulaA1 = $"=IF(H{currentRow}=\"Y\",IF(B{currentRow}-I{currentRow}<0,0,B{currentRow}-I{currentRow}),B{currentRow})";
+                            currentSheet.Cell(currentRow, 4).Value = week;
+                            currentSheet.Cell(currentRow, 5).FormulaA1 = $"D{currentRow}-1";
+                            currentSheet.Cell(currentRow, 6).FormulaA1 = $"IF(E{currentRow}=0,1,D{currentRow}*7-7)";
+                            currentSheet.Cell(currentRow, 7).Value = bill.autopayStatus;
+                            currentSheet.Cell(currentRow, 8).FormulaA1 = $"IF(I{currentRow}<>0,\"Y\",\"N\")";
+                            currentRow++;
+                        }
+                    }
                 }
+
+                // Save the workbook to persist the changes
                 workbook.SaveAs(workbookFileName);
-                Console.WriteLine($"Template file created at {workbookFileName}");
+
+                // Format the worksheet
+                var headerRange = currentSheet.Range("A1:I1");
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                foreach (var column in currentSheet.Columns())
+                {
+                    column.Width = 26;
+                }
+
+                workbook.Save();
+                Console.WriteLine("New bills added to the current worksheet.");
             }
-        }*/
-        static void FinalizeCurrentSheet(string workbookFileName)
+        }
+        static void totals(string workbookFileName)
+        {
+            using (var workbook = new XLWorkbook(workbookFileName)) {
+                var currentSheet = workbook.Worksheets.First();
+                var finalRow = currentSheet.LastRowUsed().RowNumber();
+                    }
+        }
+        static void tutorial()
+        {
+            Console.Write("To use this software, enter a number from the main menu and press enter. Use option 1 to create a spreadsheet in the same directory this software is running. Follow the prompts to have accurate expense information in your new budget spreadsheet. \nTo add new or forgotten expenses, use option number 2 from the main menu.\n" +
+                "Option number 3 on the main menu cleans up and finalizes much of the template with additional formatting and adds formulas for weekly and monthly totals.\n" +
+                "Once you are done with a month, use option 4 if you would like to save your sheet with paid amounts filled out to a new sheet and have cleared data entry sheet. To use the spreadsheet, simply fill out your amount paid using the cells in column I. The rest of the cells should populate based off the data entered.");
+        }
+        static void readMe()
+        {
+            Console.WriteLine("*This software gathers information from the user and builds a spreadsheet based off that information.\n*This is the style of spreadsheet I have used to track my expenses/budget over the last couple years.\n*While I have been content with this model for my personal use, I do believe there will be more to come as I clean it up some.\n" +
+                "Please report bugs directly to me if you know me\n \n \n \nCopyright 2024 Tyler Pittman\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. ");
+        }
+
+        static void FinalizeCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
             using (var workbook = new XLWorkbook(workbookFileName))
             {
@@ -160,25 +197,11 @@ namespace BudgetSpreadsheet
                     Console.WriteLine($"No worksheets found in the workbook.");
                     return;
                 }
-
+                
                 var currentSheet = workbook.Worksheets.First();
 
                 int lastRow = currentSheet.LastRowUsed().RowNumber();
 
-               /* bool hasCompletedSection = true;
-                for (int row = 1; row <= lastRow; row++)
-                {
-                    var cellA = currentSheet.Cell(row, 1);
-                    var cellI = currentSheet.Cell(row, 9); // Prob should only check for data in Col. I; May be more efficient to check one but is likely more error proof to check both
-                    if (!string.IsNullOrEmpty(cellA.Value.ToString()) && string.IsNullOrEmpty(cellI.Value.ToString()))
-                    {
-                        hasCompletedSection = false;
-                        break;
-                    }
-                }
-                //FORMAT HEADERS SOMEWHERE IN HERE
-                if (hasCompletedSection)
-                {*/
                     Console.Write("Enter the month to use as the name of the sheet you're saving: ");
                     string newSheetName = Console.ReadLine().Trim();
 
@@ -190,45 +213,24 @@ namespace BudgetSpreadsheet
                     {
                         currentSheet.Cell(row, 9).Clear();
                     }
-
-                    Console.Write("Do you want to add more bills for the current data entry sheet for your new month? (yes/no): ");
-                    string addMoreBills = Console.ReadLine().Trim().ToLower();
-
-                    if (addMoreBills == "yes")
-                    {
-                        AddBillsToCurrentSheet(workbookFileName);
-                    }
-
                     workbook.Save();
                     Console.WriteLine($"Current sheet finalized and a new sheet named '{newSheetName}' for data entry has been created.");
-                /*}
-                else
-                {
-                    Console.WriteLine($"Current sheet does not have a completed section.");
-                }*/
             }
 
 
 
 
         }
-        static void AddBillsToCurrentSheet(string workbookFileName)
+        static void AddBillsToCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
-            /*if (!File.Exists(workbookFileName))
-            {
-                Console.WriteLine($"No workbook file found for the current year.");
-                return;
-            }*/
-            var existingBills = new Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>();
-            var bills = new List<(string billName, decimal amount, bool isSplit, int week, string autopayStatus)>();
             using (var workbook = new XLWorkbook(workbookFileName))
             {
-                var worksheet = workbook.Worksheets.First();
+                var currentSheet = workbook.Worksheets.First();
                 int currentWeek = 0;
 
-                for (int row = 2; row <= worksheet.LastRowUsed().RowNumber(); row++)
+                for (int row = 2; row <= currentSheet.LastRowUsed().RowNumber(); row++)
                 {
-                    string cellValue = worksheet.Cell(row, 1).GetString();
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
                     if (cellValue.StartsWith("Week "))
                     {
                         currentWeek = int.Parse(cellValue.Replace("Week ", ""));
@@ -241,9 +243,9 @@ namespace BudgetSpreadsheet
                     {
                         existingBills[currentWeek].Add((
                             cellValue,
-                            worksheet.Cell(row, 2).GetValue<decimal>(),
-                            worksheet.Cell(row, 3).FormulaA1.Contains("/2"),
-                            worksheet.Cell(row, 7).GetString()
+                            currentSheet.Cell(row, 2).GetValue<decimal>(),
+                            currentSheet.Cell(row, 3).FormulaA1.Contains("/2"),
+                            currentSheet.Cell(row, 7).GetString()
                         ));
                     }
                 }
@@ -251,8 +253,7 @@ namespace BudgetSpreadsheet
                 for (int week = 1; week <= 4; week++)
                 {
                     string weekString = $"Week {week}";
-                    Console.WriteLine($"Enter bills for {weekString}:");
-                    Console.Write($"How many bills do you have for {weekString}? ");
+                    Console.Write($"How many new bills do you have for {weekString}? ");
                     int numberOfBills = int.Parse(Console.ReadLine());
 
                     for (int i = 0; i < numberOfBills; i++)
@@ -262,7 +263,7 @@ namespace BudgetSpreadsheet
                         Console.Write($"Enter the amount for {billName}: ");
                         decimal amount = decimal.Parse(Console.ReadLine());
                         Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
-                        bool isSplit = Console.ReadLine().Trim().ToLower() == "yes";
+                        bool isSplit = Console.ReadLine().Trim().ToLower().StartsWith("y");
                         Console.Write($"Enter autopay status for {billName} (yes/no): ");
                         string autopayStatus = Console.ReadLine().Trim().ToLower();
 
@@ -274,37 +275,40 @@ namespace BudgetSpreadsheet
                     }
                 }
 
-                worksheet.Clear();
+                currentSheet.Clear();
 
-                //Format headers
-                worksheet.Cell("A1").Value = "Bill Name";
-                worksheet.Cell("B1").Value = "Minimum Amount Owed";
-                worksheet.Cell("C1").Value = "Minimum Amount Due";
-                worksheet.Cell("D1").Value = "Due Date Week";
-                worksheet.Cell("E1").Value = "Transition Formula";
-                worksheet.Cell("F1").Value = "Latest Due Date";
-                worksheet.Cell("G1").Value = "Autopay Status";
-                worksheet.Cell("H1").Value = "Paid Boolean";
-                worksheet.Cell("I1").Value = "Amount Paid";
+                //formatting
+                currentSheet.Cell("A1").Value = "Bill Name";
+                currentSheet.Cell("B1").Value = "Minimum Amount Owed";
+                currentSheet.Cell("C1").Value = "Minimum Amount Due";
+                currentSheet.Cell("D1").Value = "Due Date Week";
+                currentSheet.Cell("E1").Value = "Transition Formula";
+                currentSheet.Cell("F1").Value = "Latest Due Date";
+                currentSheet.Cell("G1").Value = "Autopay Status";
+                currentSheet.Cell("H1").Value = "Paid Boolean";
+                currentSheet.Cell("I1").Value = "Amount Paid";
                 //probably bad logic
                 int currentRow = 2;
                 for (int week = 1; week <= 4; week++)
                 {
-                    worksheet.Cell(currentRow, 1).Value = $"Week {week}";
+                    currentSheet.Cell(currentRow, 1).Value = $"Week {week}";
                     currentRow++;
 
                     if (existingBills.ContainsKey(week))
                     {
                         foreach (var bill in existingBills[week])
                         {
-                            worksheet.Cell(currentRow, 1).Value = bill.billName;
-                            worksheet.Cell(currentRow, 2).Value = bill.amount;
-                            worksheet.Cell(currentRow, 3).FormulaA1 = bill.isSplit ? $"B{currentRow}/2" : $"B{currentRow}";
-                            worksheet.Cell(currentRow, 4).Value = week;
-                            worksheet.Cell(currentRow, 5).FormulaA1 = $"D{currentRow}-1";
-                            worksheet.Cell(currentRow, 6).FormulaA1 = $"IF(E{currentRow}=0,1,D{currentRow}*7-7)";
-                            worksheet.Cell(currentRow, 7).Value = bill.autopayStatus;
-                            worksheet.Cell(currentRow, 8).FormulaA1 = $"IF(I{currentRow}<>0,\"Y\",\"N\")";
+                            currentSheet.Cell(currentRow, 1).Value = bill.billName;
+                            currentSheet.Cell(currentRow, 2).Value = bill.amount;
+                            if (bill.isSplit==true)
+                                currentSheet.Cell(currentRow, 3).FormulaA1 = $"=IF(H{currentRow}=\"Y\",IF(B{currentRow}/2-I{currentRow}<0,0,B{currentRow}/2-I{currentRow}),B{currentRow}/2)";
+                            else
+                                currentSheet.Cell(currentRow, 3).FormulaA1 = $"=IF(H{currentRow}=\"Y\",IF(B{currentRow}-I{currentRow}<0,0,B{currentRow}-I{currentRow}),B{currentRow})";
+                            currentSheet.Cell(currentRow, 4).Value = week;
+                            currentSheet.Cell(currentRow, 5).FormulaA1 = $"D{currentRow}-1";
+                            currentSheet.Cell(currentRow, 6).FormulaA1 = $"IF(E{currentRow}=0,1,D{currentRow}*7-7)";
+                            currentSheet.Cell(currentRow, 7).Value = bill.autopayStatus;
+                            currentSheet.Cell(currentRow, 8).FormulaA1 = $"IF(I{currentRow}<>0,\"Y\",\"N\")";
                             currentRow++;
                         }
                     }
@@ -314,17 +318,18 @@ namespace BudgetSpreadsheet
                 workbook.Save();
 
                 // Format the worksheet
-                var headerRange = worksheet.Range("A1:E1");
+                var headerRange = currentSheet.Range("A1:I1");
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
                 headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                foreach (var column in worksheet.Columns())
+                foreach (var column in currentSheet.Columns())
                 {
                     column.Width = 26;
                 }
 
                 workbook.Save();
                 Console.WriteLine("New bills added to the current worksheet.");
+                existingBills = null;
                 //IF YOU GOT TO THE END OF THIS, MY HANDS HURT
             }
         }
