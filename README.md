@@ -1,9 +1,9 @@
 **Budgeteer Core**
-
-MIT License Agreement:
 **********************************************************************
 Included is the software I am building to automate my budget spreadsheets. Included is a template of the spreadsheet I am modeling this after.
 **********************************************************************
+GPL License Information:
+
 Copyright 2024, Ya Boi
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
