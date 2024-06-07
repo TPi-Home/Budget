@@ -1,6 +1,6 @@
 **Budgeteer Core**
 **********************************************************************
-Included is the software I am building to automate my budget spreadsheets. Included is a template of the spreadsheet I am modeling this after.
+This is the software I am building to automate my budget and expense spreadsheets. Included on the (pre)release page is a template of the spreadsheet I am modeling this after.
 **********************************************************************
 Features Pending:<br />
 *Finishing total cells/formulas on the bottom<br />
