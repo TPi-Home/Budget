@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace BudgetSpreadsheet
 {
@@ -36,7 +37,7 @@ namespace BudgetSpreadsheet
                         break;
                     case "3":
                         //add total formulas and final touchups; color code
-                        totals(workbookFileName);
+                        totalsAndFormula(workbookFileName);
                         break;
                     case "4":
                         //finalize
@@ -169,12 +170,79 @@ namespace BudgetSpreadsheet
                 Console.WriteLine("New bills added to the current worksheet.");
             }
         }
-        static void totals(string workbookFileName)
+        static void totalsAndFormula(string workbookFileName)
         {
-            using (var workbook = new XLWorkbook(workbookFileName)) {
+            using (var workbook = new XLWorkbook(workbookFileName))
+            {
                 var currentSheet = workbook.Worksheets.First();
-                var finalRow = currentSheet.LastRowUsed().RowNumber();
+                var lastRow = currentSheet.LastRowUsed().RowNumber();
+                //month total and final row logic
+                int weekEndRow = 1;
+                for (int row = 1; row <= lastRow; row++)
+                {
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue.StartsWith("Week"))
+                    {
+                        weekEndRow = row - 1;
+                        break;
                     }
+                }
+                bool totalExists = false;
+                for (int row = 1; row <= lastRow; row++)
+                {
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue == "Total:")
+                    {
+                        totalExists = true;
+                        //lastRow--;
+                        break;
+                    }
+                }
+
+                if (!totalExists)
+                {
+                    lastRow++;
+                    currentSheet.Cell(lastRow, 1).Value = "Total:";
+
+                }
+
+                workbook.Save();
+                // Dictionary to store week totals
+                Dictionary<int, string> weekTotalFormulas = new Dictionary<int, string>();
+                List<string> weekTotalCells = new List<string>();
+                // Iterate through the rows to calculate week totals
+                for (int row = 2; row <= lastRow; row++)
+                {
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue.StartsWith("Week "))
+                    {
+                        int weekNumber = int.Parse(cellValue.Replace("Week ", ""));
+                        int weekTotalStartRow = row + 1;
+                        int weekTotalEndRow = weekTotalStartRow;
+
+                        while (weekTotalEndRow <= lastRow && !currentSheet.Cell(weekTotalEndRow, 1).GetString().StartsWith("Week ") && !currentSheet.Cell(weekTotalEndRow, 1).GetString().Equals("Total:"))
+                        {
+                            weekTotalEndRow++;
+                        }
+
+                        // Check if there are bills for the given week
+                        if (weekTotalStartRow <= weekTotalEndRow - 1)
+                        {
+                            string weekTotalFormula = $"SUM(C{weekTotalStartRow}:C{weekTotalEndRow - 1})";
+                            weekTotalFormulas[weekNumber] = weekTotalFormula;
+                            currentSheet.Cell(row, 3).FormulaA1 = weekTotalFormula;
+                            weekTotalCells.Add($"C{row}");
+                        }
+                    }
+                }
+
+                string monthTotalFormula = $"SUM({string.Join(",", weekTotalCells)})";
+                currentSheet.Cell(lastRow, 3).FormulaA1 = monthTotalFormula;
+                // Save the workbook
+                workbook.Save();
+            }
+
+          
         }
         static void tutorial()
         {
@@ -216,23 +284,41 @@ namespace BudgetSpreadsheet
                     workbook.Save();
                     Console.WriteLine($"Current sheet finalized and a new sheet named '{newSheetName}' for data entry has been created.");
             }
-
-
-
-
         }
         static void AddBillsToCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
             using (var workbook = new XLWorkbook(workbookFileName))
             {
                 var currentSheet = workbook.Worksheets.First();
+                var lastRow = currentSheet.LastRowUsed().RowNumber();
                 int currentWeek = 0;
-
-                for (int row = 2; row <= currentSheet.LastRowUsed().RowNumber(); row++)
+                int weekEndRow = 1;
+                for (int row = 1; row <= lastRow; row++)
+                {
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue.StartsWith("Week"))
+                    {
+                        weekEndRow = row - 1;
+                        break;
+                    }
+                }
+                bool totalExists = false;
+                for (int row = 1; row <= lastRow; row++)
+                {
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue == "Total:")
+                    {
+                        totalExists = true;
+                        lastRow--;
+                        break;
+                    }
+                }
+                //reading and adding to dict
+                for (int row = 2; row <= lastRow; row++)
                 {
                     string cellValue = currentSheet.Cell(row, 1).GetString();
                     if (cellValue.StartsWith("Week "))
-                    {
+                    {//user needs to keep placeholder cells in A column indicating week if they want to use this software as this is critical to being able to sort in this context
                         currentWeek = int.Parse(cellValue.Replace("Week ", ""));
                         if (!existingBills.ContainsKey(currentWeek))
                         {
@@ -311,6 +397,7 @@ namespace BudgetSpreadsheet
                             currentSheet.Cell(currentRow, 8).FormulaA1 = $"IF(I{currentRow}<>0,\"Y\",\"N\")";
                             currentRow++;
                         }
+
                     }
                 }
 
@@ -331,6 +418,7 @@ namespace BudgetSpreadsheet
                 Console.WriteLine("New bills added to the current worksheet.");
                 existingBills = null;
                 //IF YOU GOT TO THE END OF THIS, MY HANDS HURT
+                //debug to see if bool totalexists or whatever needs reset
             }
         }
     }
