@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing;
+//deleted using openxml
 
 namespace BudgetSpreadsheet
 {
@@ -16,7 +16,7 @@ namespace BudgetSpreadsheet
             Console.WriteLine("What do you want to do?");
             Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
             Console.WriteLine("2. Add and merge bills into an existing worksheet.");
-            Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");
+            Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");//should probably clarify what this means; finalize month
             Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
             Console.WriteLine("5. Open tutorial.");
             Console.WriteLine("6. Open README.");
@@ -60,7 +60,7 @@ namespace BudgetSpreadsheet
                 Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
                 Console.WriteLine("2. Add and merge bills into an existing worksheet.");//will be adding a remove option later
                 Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");
-                Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
+                Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");//should probably clarify what this means; finalize month
                 Console.WriteLine("5. Open tutorial.");
                 Console.WriteLine("6. Open README.");
                 Console.WriteLine("7. Exit.");
