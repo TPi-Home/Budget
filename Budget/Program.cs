@@ -21,7 +21,7 @@ namespace BudgetSpreadsheet
             Console.WriteLine("5. Open tutorial.");
             Console.WriteLine("6. Open README.");
             Console.WriteLine("7. Exit.");
-            Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
+            Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");//MUST ADD INPUT VALIDTION
             string choice = Console.ReadLine();
             while (choice != "7")
             {
