@@ -24,13 +24,13 @@ namespace BudgetSpreadsheet
             Console.WriteLine("6. Open README.");
             Console.WriteLine("7. Exit.");
             Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
-            //string choice = Console.ReadLine();
-            Random choice = new Random(); 
+            string choice = Console.ReadLine();
+            /*Random choice = new Random(); 
             var unitTest = choice.Next(1, 4);
-            string nchoice = unitTest.ToString();
-            while (nchoice != "7")
+            string nchoice = unitTest.ToString();*/
+            while (choice != "7")
             {
-                switch (nchoice)
+                switch (choice)
                 {
                     case "1"://possibly need unit test main and normal main?
                         var result = WorkbookWrite.CreateBlank(workbookFileName, existingBills);
@@ -83,9 +83,9 @@ namespace BudgetSpreadsheet
                 //add sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
                 //hopefully lost at least 50 lines of code with the new classes in testing
-                //choice = Console.ReadLine();
-                unitTest = choice.Next(1, 4);
-                nchoice = unitTest.ToString();
+                choice = Console.ReadLine();
+                //unitTest = choice.Next(1, 4);
+                //nchoice = unitTest.ToString();
             }
         }
         static void tutorial()//will probably add some modularity here when I work on the gui

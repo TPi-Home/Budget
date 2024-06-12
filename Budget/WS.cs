@@ -72,18 +72,21 @@ namespace Budget
                     string weekString = $"Week {week}";
                     Console.Write($"How many new bills do you have for {weekString}? ");
                     int numberOfBills = int.Parse(Console.ReadLine());
-
+                    //int numberOfBills = 1;
                     for (int i = 0; i < numberOfBills; i++)
                     {
                         Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");
                         string billName = Console.ReadLine();
+                        //string billName = "test";
                         Console.Write($"Enter the amount for {billName}: ");
                         decimal amount = decimal.Parse(Console.ReadLine());
+                        //decimal amount = 22;
                         Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
                         bool isSplit = Console.ReadLine().Trim().ToLower().StartsWith("y");
+                        //bool isSplit = true;
                         Console.Write($"Enter autopay status for {billName} (yes/no): ");
-                        string autopayStatus = Console.ReadLine().Trim().ToLower();
-
+                        string autoPayStatus = Console.ReadLine().Trim().ToLower();
+                        //string autoPayStatus = "Y";
                         if (!existingBills.ContainsKey(week))
                         {
                             existingBills[week] = new List<(string billName, decimal amount, bool isSplit, string autopayStatus)>();
@@ -92,7 +95,7 @@ namespace Budget
                         //check for duplicates again. may be excessive
                         if (!existingBills[week].Exists(bill => bill.billName == billName))
                         {
-                            existingBills[week].Add((billName, amount, isSplit, autopayStatus));
+                            existingBills[week].Add((billName, amount, isSplit, autoPayStatus));
                         }
                     }
                 }
