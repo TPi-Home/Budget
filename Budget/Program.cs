@@ -69,6 +69,7 @@ namespace BudgetSpreadsheet
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
                 //add delete expensese, fix logic, handle exceptions
                 //check for open file
+                //add sql for storing in program
                 
                 choice = Console.ReadLine();
             }
@@ -81,7 +82,7 @@ namespace BudgetSpreadsheet
                 int currentWeek = 0;
                 string[] args = null;
                 //check for file in root directory
-                if (File.Exists(workbookFileName))
+                if (File.Exists(workbookFileName)) // don't forget to use @ when adding gui 
                 {
                     Console.WriteLine($"You already have a Workbook for this year!");
                     return;
@@ -104,7 +105,7 @@ namespace BudgetSpreadsheet
                         Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
                         bool isSplit = Console.ReadLine().Trim().ToLower().StartsWith("y");
                         Console.Write($"Enter autopay status for {billName} (yes/no): ");
-                        string autopayStatus = Console.ReadLine().Trim().ToLower();
+                        string autopayStatus = Console.ReadLine().Trim().ToLower(); //tryparse to prevent breaking here
 
                         if (!existingBills.ContainsKey(week))
                         {
