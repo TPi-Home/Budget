@@ -78,11 +78,10 @@ namespace BudgetSpreadsheet
                 Console.WriteLine("7. Exit.");
                 Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");// Random rnd = new Random(); int unitTest  = rnd.Next(1, 4);
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
-                //add delete expensese, fix logic, handle exceptions
+                //add delete expensese
                 //check for open file
                 //add sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
-                //hopefully lost at least 50 lines of code with the new classes in testing
                 //ensure dependencies use MIT license
                 choice = Console.ReadLine();
                 //unitTest = choice.Next(1, 4);

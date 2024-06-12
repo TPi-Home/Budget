@@ -91,7 +91,6 @@ namespace Budget
                         {
                             existingBills[week] = new List<(string billName, decimal amount, bool isSplit, string autopayStatus)>();
                         }
-
                         //check for duplicates again. may be excessive
                         if (!existingBills[week].Exists(bill => bill.billName == billName))
                         {
@@ -135,7 +134,6 @@ namespace Budget
                     }
                 }
                 workbook.Save();//probably also redundant?
-                //format the worksheet
                 var headerRange = currentSheet.Range("A1:I1");
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
