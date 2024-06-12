@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budget
 {
-    internal class WS
+    internal class WS //May be too much going on in this class.
     {
         public static void AddBillsToCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
@@ -18,10 +18,8 @@ namespace Budget
                 {
                     throw new InvalidOperationException("The workbook must contain at least one worksheet.");
                 }
-
                 var lastRow = currentSheet.LastRowUsed()?.RowNumber() ?? 0;
                 int currentWeek = 0;
-
                 for (int row = 1; row <= lastRow; row++)
                 {
                     string cellValue = currentSheet.Cell(row, 1).GetString();
@@ -31,7 +29,6 @@ namespace Budget
                         break;
                     }
                 }
-
                 bool totalExists = false;
                 for (int row = 1; row <= lastRow; row++)
                 {
@@ -43,7 +40,6 @@ namespace Budget
                         break;
                     }
                 }
-
                 for (int row = 2; row <= lastRow; row++)
                 {
                     string cellValue = currentSheet.Cell(row, 1).GetString();
@@ -100,9 +96,7 @@ namespace Budget
                         }
                     }
                 }
-
                 currentSheet.Clear();
-
                 //formatting
                 currentSheet.Cell("A1").Value = "Bill Name";
                 currentSheet.Cell("B1").Value = "Minimum Amount Owed";
@@ -119,7 +113,6 @@ namespace Budget
                 {
                     currentSheet.Cell(currentRow, 1).Value = $"Week {week}";
                     currentRow++;
-
                     if (existingBills.ContainsKey(week))
                     {
                         foreach (var bill in existingBills[week])
@@ -138,7 +131,6 @@ namespace Budget
                         }
                     }
                 }
-
                 workbook.Save();//probably also redundant?
                 //format the worksheet
                 var headerRange = currentSheet.Range("A1:I1");
@@ -149,7 +141,6 @@ namespace Budget
                 {
                     column.Width = 26;
                 }
-
                 workbook.Save();
                 Console.WriteLine("New bills added to the current worksheet.");
             }
@@ -160,7 +151,6 @@ namespace Budget
             {
                 var currentSheet = workbook.Worksheets.First();
                 var lastRow = currentSheet.LastRowUsed()?.RowNumber() ?? 0;
-
                 //month total and final row logic
                 int weekEndRow = 1;
                 for (int row = 1; row <= lastRow; row++)
@@ -172,7 +162,6 @@ namespace Budget
                         break;
                     }
                 }
-
                 bool totalExists = false;
                 for (int row = 1; row <= lastRow; row++)
                 {
@@ -183,15 +172,12 @@ namespace Budget
                         break;
                     }
                 }
-
                 if (!totalExists)
                 {
                     lastRow++;
                     currentSheet.Cell(lastRow, 1).Value = "Total:";
                 }
-
                 workbook.Save();
-
                 Dictionary<int, string> weekTotalFormulas = new Dictionary<int, string>();
                 List<string> weekTotalCells = new List<string>();
                 for (int row = 2; row <= lastRow; row++)
@@ -216,7 +202,6 @@ namespace Budget
                         }
                     }
                 }
-
                 string monthTotalFormula = $"SUM({string.Join(",", weekTotalCells)})";
                 currentSheet.Cell(lastRow, 3).FormulaA1 = monthTotalFormula;
                 workbook.Save();
@@ -231,18 +216,12 @@ namespace Budget
                     Console.WriteLine($"No worksheets found in the workbook.");
                     return;
                 }
-
                 var currentSheet = workbook.Worksheets.First();
-
                 int lastRow = currentSheet.LastRowUsed().RowNumber();
-
                 Console.Write("Enter the month to use as the name of the sheet you're saving: ");
                 string newSheetName = Console.ReadLine().Trim();
-
                 var newSheet = currentSheet.CopyTo(newSheetName);
-
                 newSheet.Name = newSheetName;
-
                 for (int row = 2; row <= currentSheet.LastRowUsed().RowNumber(); row++)
                 {
                     currentSheet.Cell(row, 9).Clear();
