@@ -32,7 +32,7 @@ namespace BudgetSpreadsheet
             {
                 switch (choice)
                 {
-                    case "1"://possibly need unit test main and normal main?
+                    case "1":
                         var result = WorkbookWrite.CreateBlank(workbookFileName, existingBills);
 
                         if (result.Success)
@@ -83,6 +83,7 @@ namespace BudgetSpreadsheet
                 //add sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
                 //hopefully lost at least 50 lines of code with the new classes in testing
+                //ensure dependencies use MIT license
                 choice = Console.ReadLine();
                 //unitTest = choice.Next(1, 4);
                 //nchoice = unitTest.ToString();

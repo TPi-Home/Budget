@@ -75,7 +75,7 @@ namespace Budget
                     //int numberOfBills = 1;
                     for (int i = 0; i < numberOfBills; i++)
                     {
-                        Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");
+                        Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");//INPUT VALIDATION HERE ASAP
                         string billName = Console.ReadLine();
                         //string billName = "test";
                         Console.Write($"Enter the amount for {billName}: ");
