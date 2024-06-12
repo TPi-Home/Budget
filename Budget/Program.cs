@@ -73,7 +73,7 @@ namespace BudgetSpreadsheet
                 Console.WriteLine("5. Open tutorial.");
                 Console.WriteLine("6. Open README.");
                 Console.WriteLine("7. Exit.");
-                Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
+                Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");// Random rnd = new Random(); int unitTest  = rnd.Next(1, 4);
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
                 //add delete expensese, fix logic, handle exceptions
                 //check for open file
