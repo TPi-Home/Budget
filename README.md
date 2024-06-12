@@ -3,6 +3,9 @@
 This is the software I am building to automate my budget and expense spreadsheets. Included on the (pre)release page is a template of the spreadsheet I am modeling this after.
 **********************************************************************
 Features Pending:<br />
+*Modular classes in testing repository for later use in a GUI(needs more work and refactoring)<br/>
+*Table theme class needed<br/>
+*Unit tests needed<br/>
 *Finishing total cells/formulas on the bottom<br />
 *Simple graphical user interface<br />
 *Adding tax and adjusting totals to account for that, further helping the user better itemize their expenses<br />
