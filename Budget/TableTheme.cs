@@ -54,7 +54,7 @@ namespace Budget
                 for (int row = 2; row <= lastRow; row++)
                 {
                     string cellValue = currentSheet.Cell(row, 1).GetString();
-                    if (cellValue.StartsWith("Week "))
+                    if (cellValue.StartsWith("Week ")||cellValue.StartsWith("Total"))
                     {
                         for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
                         {
