@@ -1,0 +1,14 @@
+6/13/24 Tyler Pittman
+
+
+*Nullable types starting in WorkbookResult
+
+Severity	Code	Description	Project	File	Line	Suppression State	Details
+Warning		The variable 'totalExists' is assigned but its value is never used	Budget	D:\Budgeteer\Console\Testing\Budget\Budget\WS.cs	27		
+*Make sure it is used
+
+Severity	Code	Description	Project	File	Line	Suppression State	Details
+Warning		Dereference of a possibly null reference.	Budget	D:\Budgeteer\Console\Testing\Budget\Budget\WS.cs	122		
+
+Severity	Code	Description	Project	File	Line	Suppression State	Details
+Warning (active)	CS8600	Converting null literal or possible null value to non-nullable type.	Budget	D:\Budgeteer\Console\Testing\Budget\Budget\Program.cs	93		
