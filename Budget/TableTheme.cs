@@ -1,6 +1,5 @@
 ﻿//6/13/24 Tyler Pittman
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Budget
 {
@@ -54,14 +53,14 @@ namespace Budget
                 for (int row = 2; row <= lastRow; row++)
                 {
                     string cellValue = currentSheet.Cell(row, 1).GetString();
-                    if (cellValue.StartsWith("Week ")||cellValue.StartsWith("Total"))
+                    if (cellValue.StartsWith("Week ") || cellValue.StartsWith("Total"))
                     {
                         for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
                         {
                             currentSheet.Cell(row, col).Style.Fill.BackgroundColor = weekRowColor;
                             currentSheet.Cell(row, col).Style.Font.FontColor = XLColor.White;
                             //border:
-                            currentSheet.Cell(row,col).Style.Border.SetTopBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetTopBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetRightBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetBottomBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetLeftBorder(XLBorderStyleValues.Medium);

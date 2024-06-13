@@ -16,13 +16,13 @@ namespace BudgetSpreadsheet
             Console.WriteLine("What do you want to do?");
             Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
             Console.WriteLine("2. Add or merge bills into default worksheet.");
-            Console.WriteLine("3. Add formulas to final cells and apply table theme to default sheet.");//should probably clarify what this means; finalize month
+            Console.WriteLine("3. Add formulas to final cells and apply table theme to default sheet.");
             Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
             Console.WriteLine("5. Open tutorial.");
             Console.WriteLine("6. Open README.");
             Console.WriteLine("7. Exit.");
             Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
             /*Random choice = new Random(); 
             var unitTest = choice.Next(1, 4);
             string nchoice = unitTest.ToString();*/
@@ -43,11 +43,11 @@ namespace BudgetSpreadsheet
                         }
                         break;
                     case "2":
-                        WS.AddBillsToCurrentSheet(workbookFileName, existingBills);//broke here 6/13/2024. didn't crash but it broke the conditionals here
+                        WSAppend.AddBillsToCurrentSheet(workbookFileName, existingBills);//broke here 6/13/2024. didn't crash but it broke the conditionals here
                         break;
                     case "3":
                         //add total formulas and final touchups; color code
-                        WS.totalsAndFormula(workbookFileName);
+                        WSAppend.totalsAndFormula(workbookFileName);
                         //var worksheet = workbook.Worksheet(currentSheet);
                         var tableTheme = new TableTheme();
 
@@ -59,7 +59,7 @@ namespace BudgetSpreadsheet
                         break;
                     case "4":
                         //finalize
-                        WS.FinalizeCurrentSheet(workbookFileName, existingBills);
+                        WSAppend.FinalizeCurrentSheet(workbookFileName, existingBills);
                         break;
                     case "5":
                         tutorial();

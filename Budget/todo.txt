@@ -1,0 +1,7 @@
+introduce helper methods for data gathering and potentially a class
+
+further implementation of workbookresult
+
+data gathering with helper functions
+
+general refactoring
