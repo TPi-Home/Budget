@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 
 namespace Budget
@@ -28,9 +29,11 @@ namespace Budget
                 {
                     workbook.AddWorksheet(newSheetName);  //ensure at least one worksheet is added
                     workbook.SaveAs(workbookFileName);
+
                 }
                 return new WorkbookResult
                 {
+
                     Success = true,
                     Message = $"Workbook created: {workbookFileName}"
                 };
@@ -44,7 +47,6 @@ namespace Budget
                 };
             }
         }
-
     }
 }
     

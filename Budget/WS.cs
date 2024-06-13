@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budget
 {
-    internal class WS //May be too much going on in this class.
+    internal class WS //Definitely too much going on in this class.
     {
         public static void AddBillsToCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
@@ -98,18 +98,7 @@ namespace Budget
                         }
                     }
                 }
-                currentSheet.Clear();
-                //formatting
-                currentSheet.Cell("A1").Value = "Bill Name";
-                currentSheet.Cell("B1").Value = "Minimum Amount Owed";
-                currentSheet.Cell("C1").Value = "Minimum Amount Due";
-                currentSheet.Cell("D1").Value = "Due Date Week";
-                currentSheet.Cell("E1").Value = "Transition Formula";
-                currentSheet.Cell("F1").Value = "Latest Due Date";
-                currentSheet.Cell("G1").Value = "Autopay Status";
-                currentSheet.Cell("H1").Value = "Paid Boolean";
-                currentSheet.Cell("I1").Value = "Amount Paid";
-
+                currentSheet.Clear();                
                 int currentRow = 2;
                 for (int week = 1; week <= 4; week++)
                 {
@@ -132,15 +121,6 @@ namespace Budget
                             currentRow++;
                         }
                     }
-                }
-                workbook.Save();//probably also redundant?
-                var headerRange = currentSheet.Range("A1:I1");
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
-                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                foreach (var column in currentSheet.Columns())
-                {
-                    column.Width = 26;
                 }
                 workbook.Save();
                 Console.WriteLine("New bills added to the current worksheet.");
@@ -205,6 +185,8 @@ namespace Budget
                 }
                 string monthTotalFormula = $"SUM({string.Join(",", weekTotalCells)})";
                 currentSheet.Cell(lastRow, 3).FormulaA1 = monthTotalFormula;
+
+                
                 workbook.Save();
             }
         }
@@ -219,7 +201,7 @@ namespace Budget
                 }
                 var currentSheet = workbook.Worksheets.First();
                 int lastRow = currentSheet.LastRowUsed().RowNumber();
-                Console.Write("Enter the month to use as the name of the sheet you're saving: ");
+                Console.Write("Enter the month to use as the name of the sheet you're saving: ");//NEED TO MAKE SURE TO SET DEFAULT SHEET PROPERLY SOMEWHERE HERE
                 string newSheetName = Console.ReadLine().Trim();
                 var newSheet = currentSheet.CopyTo(newSheetName);
                 newSheet.Name = newSheetName;

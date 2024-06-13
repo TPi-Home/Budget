@@ -17,8 +17,8 @@ namespace BudgetSpreadsheet
             // Initial Menu
             Console.WriteLine("What do you want to do?");
             Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
-            Console.WriteLine("2. Add and merge bills into an existing worksheet.");
-            Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");//should probably clarify what this means; finalize month
+            Console.WriteLine("2. Add or merge bills into default worksheet.");
+            Console.WriteLine("3. Add formulas to final cells and apply table theme to default sheet.");//should probably clarify what this means; finalize month
             Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");
             Console.WriteLine("5. Open tutorial.");
             Console.WriteLine("6. Open README.");
@@ -50,6 +50,14 @@ namespace BudgetSpreadsheet
                     case "3":
                         //add total formulas and final touchups; color code
                         WS.totalsAndFormula(workbookFileName);
+                        //var worksheet = workbook.Worksheet(currentSheet);
+                        var tableTheme = new TableTheme();
+
+                        // Apply header theme
+                        TableTheme.applyHeaders(workbookFileName);
+
+                        // Apply full theme
+                        tableTheme.applyTheme(workbookFileName);
                         break;
                     case "4":
                         //finalize
@@ -57,7 +65,7 @@ namespace BudgetSpreadsheet
                         break;
                     case "5":
                         tutorial();
-                        break;
+                        break;//possibly add table themes here
                     case "6":
                         readMe();
                         break;
@@ -70,8 +78,8 @@ namespace BudgetSpreadsheet
                 }
                 Console.WriteLine("What do you want to do?");
                 Console.WriteLine("1. Create an appropriately named blank spreadsheet in the root directory.\n(This software follows specific naming conventions, such as the current year in the case of the workbook)");
-                Console.WriteLine("2. Add and merge bills into an existing worksheet.");//will be adding a remove option later
-                Console.WriteLine("3. Add formulas to final cells to determine to weekly and monthly expense totals.");//Are you sure??
+                Console.WriteLine("2. Add or merge bills into default worksheet.");//will be adding a remove option later
+                Console.WriteLine("3. Add formulas to final cells and apply table theme to default sheet.");//Are you sure??
                 Console.WriteLine("4. Finalize the current sheet and start a new sheet for data entry.");//should probably clarify what this means; finalize month
                 Console.WriteLine("5. Open tutorial.");
                 Console.WriteLine("6. Open README.");
