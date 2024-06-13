@@ -1,9 +1,4 @@
 ﻿using ClosedXML.Excel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Budget
 {
@@ -66,39 +61,124 @@ namespace Budget
                     }
                 }
 
-                //adding new bills for each week
                 for (int week = 1; week <= 4; week++)
                 {
                     string weekString = $"Week {week}";
-                    Console.Write($"How many new bills do you have for {weekString}? ");
-                    int numberOfBills = int.Parse(Console.ReadLine());
-                    //int numberOfBills = 1;
+                    int numberOfBills;
+
+                    while (true)
+                    {
+                        Console.Write($"How many new bills do you have for {weekString}? ");//enter a break after 
+                        string input = Console.ReadLine();
+
+                        if (int.TryParse(input, out numberOfBills) && numberOfBills >= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter a non-negative integer.");
+                        }
+                    }
+
                     for (int i = 0; i < numberOfBills; i++)
                     {
-                        Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");//INPUT VALIDATION HERE ASAP
-                        string billName = Console.ReadLine();
-                        //string billName = "test";
-                        Console.Write($"Enter the amount for {billName}: ");
-                        decimal amount = decimal.Parse(Console.ReadLine());
-                        //decimal amount = 22;
-                        Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
-                        bool isSplit = Console.ReadLine().Trim().ToLower().StartsWith("y");
-                        //bool isSplit = true;
-                        Console.Write($"Enter autopay status for {billName} (yes/no): ");
-                        string autoPayStatus = Console.ReadLine().Trim().ToLower();
-                        //string autoPayStatus = "Y";
+                        string billName;
+                        while (true)
+                        {
+                            Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");
+                            billName = Console.ReadLine();
+
+                            if (!string.IsNullOrWhiteSpace(billName))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Bill name cannot be empty.");
+                            }
+                        }
+
+                        decimal amount;
+                        while (true)
+                        {
+                            Console.Write($"Enter the amount for {billName}: ");
+                            string input = Console.ReadLine();
+
+                            if (decimal.TryParse(input, out amount) && amount >= 0)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please enter a non-negative decimal number.");
+                            }
+                        }
+
+                        bool isSplit;
+                        while (true)
+                        {
+                            Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
+                            string input = Console.ReadLine().Trim().ToLower();
+
+                            if (input == "yes")
+                            {
+                                isSplit = true;
+                                break;
+                            }
+                            else if (input == "no")
+                            {
+                                isSplit = false;
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                            }
+                        }
+
+                        string autoPayStatus;
+                        while (true)
+                        {
+                            Console.Write($"Enter autopay status for {billName} (yes/no): ");
+                            autoPayStatus = Console.ReadLine().Trim().ToLower();
+
+                            if (autoPayStatus == "yes" || autoPayStatus == "no")
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                            }
+                        }
+
                         if (!existingBills.ContainsKey(week))
                         {
                             existingBills[week] = new List<(string billName, decimal amount, bool isSplit, string autopayStatus)>();
                         }
-                        //check for duplicates again. may be excessive
+
                         if (!existingBills[week].Exists(bill => bill.billName == billName))
                         {
                             existingBills[week].Add((billName, amount, isSplit, autoPayStatus));
                         }
+                        else
+                        {
+                            Console.WriteLine($"Bill with the name {billName} already exists for {weekString}. Skipping duplicate.");
+                        }
                     }
                 }
-                currentSheet.Clear();                
+
+                //print the collected bills for verification
+                foreach (var weekBills in existingBills)
+                {
+                    Console.WriteLine($"Bills for Week {weekBills.Key}:");
+                    foreach (var bill in weekBills.Value)
+                    {
+                        Console.WriteLine($"- {bill.billName}: {bill.amount}, Split: {bill.isSplit}, Autopay: {bill.autopayStatus}");
+                    }
+                }
+                currentSheet.Clear();
                 int currentRow = 2;
                 for (int week = 1; week <= 4; week++)
                 {
@@ -180,13 +260,14 @@ namespace Budget
                             weekTotalFormulas[weekNumber] = weekTotalFormula;
                             currentSheet.Cell(row, 3).FormulaA1 = weekTotalFormula;
                             weekTotalCells.Add($"C{row}");
+                            //paid total here
                         }
                     }
                 }
                 string monthTotalFormula = $"SUM({string.Join(",", weekTotalCells)})";
                 currentSheet.Cell(lastRow, 3).FormulaA1 = monthTotalFormula;
 
-                
+
                 workbook.Save();
             }
         }

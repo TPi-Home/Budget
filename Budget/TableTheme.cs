@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using System;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Budget
 {
@@ -24,10 +24,9 @@ namespace Budget
                     Console.WriteLine("The worksheet is empty.");
                     return;
                 }
-
-                var headerColor = XLColor.CoolBlack;
-                var bodyColor = XLColor.AliceBlue;
-
+                var headerColor = XLColor.Black;
+                var bodyColor = XLColor.FromHtml("#a27ddd");
+                var weekRowColor = XLColor.FromHtml("#4f1c75");
                 var range = currentSheet.Range(firstCell.Address, lastCell.Address);
                 if (range == null)
                 {
@@ -48,20 +47,47 @@ namespace Budget
                 {
                     Console.WriteLine("Failed to find the header row.");
                 }
-
+                var lastRow = currentSheet.LastRowUsed()?.RowNumber() ?? 0;
                 //apply body theme
-                var bodyRows = range.Rows(row => row.RowNumber() > headerRow.RowNumber());
-                foreach (var row in bodyRows)
+                var bodyRows = range.Rows(row => row.RowNumber() > headerRow.RowNumber());//check for redundant variables
+                for (int row = 2; row <= lastRow; row++)
                 {
-                    row.Style.Fill.BackgroundColor = bodyColor;
-                }
+                    string cellValue = currentSheet.Cell(row, 1).GetString();
+                    if (cellValue.StartsWith("Week "))
+                    {
+                        for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
+                        {
+                            currentSheet.Cell(row, col).Style.Fill.BackgroundColor = weekRowColor;
+                            currentSheet.Cell(row, col).Style.Font.FontColor = XLColor.White;
+                            //border:
+                            currentSheet.Cell(row,col).Style.Border.SetTopBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetRightBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetBottomBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetLeftBorder(XLBorderStyleValues.Medium);
+                        }
+                    }
+                    else
+                    {
+                        for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
+                        {
+                            currentSheet.Cell(row, col).Style.Fill.BackgroundColor = bodyColor;
+                            currentSheet.Cell(row, col).Style.Font.FontColor = XLColor.Black; //if cell col 1 row x, write as bold
+                            //border:
+                            currentSheet.Cell(row, col).Style.Border.SetTopBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetRightBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetBottomBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Border.SetLeftBorder(XLBorderStyleValues.Medium);
 
+                        }
+                    }
+                }
                 workbook.Save();
                 Console.WriteLine("Workbook saved successfully with applied theme.");
             }
         }
-        
-        public static void applyHeaders(string workbookFileName) {
+
+        public static void applyHeaders(string workbookFileName)
+        {
             using (var workbook = new XLWorkbook(workbookFileName))
             {
                 var currentSheet = workbook.Worksheets.FirstOrDefault();
@@ -82,7 +108,7 @@ namespace Budget
                 headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 foreach (var column in currentSheet.Columns())
                 {
-                    column.Width = 26;//as conditions imply
+                    column.Width = 22;//as conditions imply
                 }
                 workbook.Save();
             }

@@ -1,6 +1,4 @@
 ﻿using Budget;
-using ClosedXML.Excel;
-using Spire.Pdf.General.Render.Font.OpenTypeLookup;
 //deleted using openxml
 
 namespace BudgetSpreadsheet
@@ -45,7 +43,7 @@ namespace BudgetSpreadsheet
                         }
                         break;
                     case "2":
-                        WS.AddBillsToCurrentSheet(workbookFileName, existingBills);
+                        WS.AddBillsToCurrentSheet(workbookFileName, existingBills);//broke here 6/13/2024. didn't crash but it broke the conditionals here
                         break;
                     case "3":
                         //add total formulas and final touchups; color code
@@ -88,6 +86,7 @@ namespace BudgetSpreadsheet
                 //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
                 //add delete expensese
                 //check for open file
+                //NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS
                 //add sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
                 //ensure dependencies use MIT license
