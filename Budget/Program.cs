@@ -87,6 +87,7 @@ namespace BudgetSpreadsheet
                 //add delete expensese
                 //check for open file
                 //NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS
+                //NEED TO BE ABLE TO DYNAMICALLY ADD COLUMNS, ENTER NEW FORMULAS WITH EASE (ML?), AND ADJUST BILL SPLITTING 
                 //add sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
                 //ensure dependencies use MIT license
