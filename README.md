@@ -3,6 +3,8 @@
 This is the software I am building to automate my budget and expense spreadsheets. Included on the (pre)release page is a template of the spreadsheet I am modeling this after.
 **********************************************************************
 Features Pending:<br />
+*Add an option to change the colors of the spreadsheet theme <br />
+*Add an option to split bills that isn't half and an option to split by amount of people on a bill <br />
 *Simple graphical user interface<br />
 *Adding tax and adjusting totals to account for that, further helping the user better itemize their expenses<br />
 *A separate sheet for income<br />
