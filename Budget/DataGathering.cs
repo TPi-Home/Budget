@@ -2,10 +2,8 @@
 {
     internal class DataGathering
     {
-        public Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> CollectBills()
+        public static void DataGather(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
-            var existingBills = new Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>>();
-
             for (int week = 1; week <= 4; week++)
             {
                 string weekString = $"Week {week}";
@@ -13,7 +11,7 @@
 
                 while (true)
                 {
-                    Console.Write($"How many new bills do you have for {weekString}? ");
+                    Console.Write($"How many new bills do you have for {weekString}? ");//enter a break after 
                     string? input = Console.ReadLine();
 
                     if (int.TryParse(input, out numberOfBills) && numberOfBills >= 0)
@@ -28,10 +26,75 @@
 
                 for (int i = 0; i < numberOfBills; i++)
                 {
-                    string? billName = GetBillName(weekString, i);
-                    decimal amount = GetBillAmount(billName);
-                    bool isSplit = IsBillSplit(billName);
-                    string? autoPayStatus = GetAutoPayStatus(billName);
+                    string? billName;
+                    while (true)
+                    {
+                        Console.Write($"Enter the name of bill {i + 1} for {weekString}: ");
+                        billName = Console.ReadLine();
+
+                        if (!string.IsNullOrWhiteSpace(billName))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Bill name cannot be empty.");
+                        }
+                    }
+
+                    decimal amount;
+                    while (true)
+                    {
+                        Console.Write($"Enter the amount for {billName}: ");
+                        string? input = Console.ReadLine();
+
+                        if (decimal.TryParse(input, out amount) && amount >= 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter a non-negative decimal number.");
+                        }
+                    }
+
+                    bool isSplit;
+                    while (true)
+                    {
+                        Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
+                        string? input = Console.ReadLine().Trim().ToLower();
+
+                        if (input == "yes")
+                        {
+                            isSplit = true;
+                            break;
+                        }
+                        else if (input == "no")
+                        {
+                            isSplit = false;
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                        }
+                    }
+
+                    string? autoPayStatus;
+                    while (true)
+                    {
+                        Console.Write($"Enter autopay status for {billName} (yes/no): ");
+                        autoPayStatus = Console.ReadLine().Trim().ToLower();
+
+                        if (autoPayStatus == "yes" || autoPayStatus == "no")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                        }
+                    }
 
                     if (!existingBills.ContainsKey(week))
                     {
@@ -48,87 +111,7 @@
                     }
                 }
             }
-
-            return existingBills;
         }
 
-        private string GetBillName(string weekString, int index)
-        {
-            string? billName;
-            while (true)
-            {
-                Console.Write($"Enter the name of bill {index + 1} for {weekString}: ");
-                billName = Console.ReadLine();
-
-                if (!string.IsNullOrWhiteSpace(billName))
-                {
-                    return billName;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Bill name cannot be empty.");
-                }
-            }
-        }
-
-        private decimal GetBillAmount(string billName)
-        {
-            decimal amount;
-            while (true)
-            {
-                Console.Write($"Enter the amount for {billName}: ");
-                string? input = Console.ReadLine();
-
-                if (decimal.TryParse(input, out amount) && amount >= 0)
-                {
-                    return amount;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a non-negative decimal number.");
-                }
-            }
-        }
-
-        private bool IsBillSplit(string billName)
-        {
-            while (true)
-            {
-                Console.Write($"Are you splitting {billName} with a roommate? (yes/no): ");
-                string? input = Console.ReadLine().Trim().ToLower();
-
-                if (input == "yes")
-                {
-                    return true;
-                }
-                else if (input == "no")
-                {
-                    return false;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-            }
-        }
-
-        private string GetAutoPayStatus(string billName)
-        {
-            while (true)
-            {
-                Console.Write($"Enter autopay status for {billName} (yes/no): ");
-                string? input = Console.ReadLine().Trim().ToLower();
-
-                if (input == "yes" || input == "no")
-                {
-                    return input;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-            }
-        }
     }
-
 }

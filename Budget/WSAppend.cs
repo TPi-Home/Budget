@@ -61,8 +61,8 @@ namespace Budget
                         }
                     }
                 }
-                dataGather(workbookFileName, existingBills);
-
+                //dataGather(workbookFileName, existingBills);
+                DataGather(workbookFileName,existingBills);
                 //print the collected bills for verification
                 foreach (var weekBills in existingBills)
                 {
@@ -101,7 +101,7 @@ namespace Budget
             }
         }
 
-        private static void dataGather(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
+        private static void DataGather(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)//make class and break up into helper functions
         {
             for (int week = 1; week <= 4; week++)
             {
@@ -211,7 +211,7 @@ namespace Budget
                 }
             }
         }
-        public static void totalsAndFormula(string workbookFileName)
+        public static void TotalsAndFormula(string workbookFileName)
         {
             using (var workbook = new XLWorkbook(workbookFileName))
             {
