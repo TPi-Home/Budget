@@ -10,3 +10,7 @@ dynamic form with scrolling to add additional labels and textboxes during data e
 
 //NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS
 //NEED TO BE ABLE TO DYNAMICALLY ADD COLUMNS, ENTER NEW FORMULAS WITH EASE (ML?), AND ADJUST BILL SPLITTING 
+
+//spanish SQL
+
+add git ignore
