@@ -21,3 +21,5 @@ maybe a class for income that calls a helper function in data gathering
 
 
 add to google site more history. look into a domain. mention starcap.
+
+spanish sql
