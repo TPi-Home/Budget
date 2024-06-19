@@ -62,7 +62,7 @@ namespace Budget
                     }
                 }
                 //dataGather(workbookFileName, existingBills);
-                DataGather(workbookFileName,existingBills);
+                DataGathering.DataGather(workbookFileName,existingBills);
                 //print the collected bills for verification
                 foreach (var weekBills in existingBills)
                 {
