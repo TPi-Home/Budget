@@ -25,3 +25,7 @@ add to google site more history. look into a domain. mention starcap.
 spanish sql
 
 icons for app and for site
+
+Change final due date columns and have split status be determined by a column of the sheet instead of ONLY user input on app
+
+Fix alignment to make cells be more consistent 
