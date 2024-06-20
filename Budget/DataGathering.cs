@@ -4,7 +4,7 @@
     {
         public static void DataGather(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
-            for (int week = 1; week <= 4; week++)
+            for (int week = 1; week <= 4; week++)// use this function as main function of class, break off and call others as helper functions
             {
                 string weekString = $"Week {week}";
                 int numberOfBills;
