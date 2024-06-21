@@ -1,5 +1,7 @@
 introduce helper methods for data gathering and potentially a class
 
+ADD TOTAL BEFORE MIN. DUE COLUMN
+
 further implementation of workbookresult
 
 data gathering with helper functions
