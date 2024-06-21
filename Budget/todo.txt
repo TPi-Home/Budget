@@ -1,0 +1,31 @@
+introduce helper methods for data gathering and potentially a class
+
+further implementation of workbookresult
+
+data gathering with helper functions
+
+general refactoring
+
+dynamic form with scrolling to add additional labels and textboxes during data entry
+
+better input validation where needed
+
+model view viewmodel implemenation 
+
+//NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS
+//NEED TO BE ABLE TO DYNAMICALLY ADD COLUMNS, ENTER NEW FORMULAS WITH EASE (ML?), AND ADJUST BILL SPLITTING 
+
+WS.addAfterLast OR Ws.addIncome
+add after the last row lastrow +=3 
+maybe a class for income that calls a helper function in data gathering
+
+
+add to google site more history. look into a domain. mention starcap.
+
+spanish sql
+
+icons for app and for site
+
+Change final due date columns and have split status be determined by a column of the sheet instead of ONLY user input on app
+
+Fix alignment to make cells be more consistent 
