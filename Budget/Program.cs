@@ -23,6 +23,7 @@ namespace BudgetSpreadsheet
             Console.WriteLine("7. Exit.");
             Console.Write("Enter your choice (1, 2, 3, 4, 5, 6 or 7): ");
             string? choice = Console.ReadLine();
+
             /*Random choice = new Random(); 
             var unitTest = choice.Next(1, 4);
             string nchoice = unitTest.ToString();*/
