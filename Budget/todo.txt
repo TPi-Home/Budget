@@ -1,30 +1,16 @@
-introduce helper methods for data gathering and potentially a class
+ADD TOTAL BEFORE MIN. DUE COLUMN
 
-further implementation of workbookresult
-
-data gathering with helper functions
-
-general refactoring
+Option to open spreadsheet. Would probably need to check for an instance of Excel or LibreOffice.
 
 dynamic form with scrolling to add additional labels and textboxes during data entry
 
-better input validation where needed
-
-model view viewmodel implemenation 
-
-//NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS
-//NEED TO BE ABLE TO DYNAMICALLY ADD COLUMNS, ENTER NEW FORMULAS WITH EASE (ML?), AND ADJUST BILL SPLITTING 
+better input validation where needed, and:
+NEED TO ADD AN OPTION TO BREAK EARLY OR MODIFY NUMBER OF BILLS in data gathering
+NEED TO BE ABLE TO DYNAMICALLY ADD/REMOVE COLUMNS, ENTER NEW FORMULAS WITH EASE, AND ADJUST BILL SPLITTING 
 
 WS.addAfterLast OR Ws.addIncome
 add after the last row lastrow +=3 
 maybe a class for income that calls a helper function in data gathering
-
-
-add to google site more history. look into a domain. mention starcap.
-
-spanish sql
-
-icons for app and for site
 
 Change final due date columns and have split status be determined by a column of the sheet instead of ONLY user input on app
 
