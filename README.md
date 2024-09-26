@@ -3,17 +3,17 @@
 This is the software I am building to automate my budget and expense spreadsheets. Included on the (pre)release page is a template of the spreadsheet I am modeling this after.
 **********************************************************************
 **How To Use This Software:**<br />
-*Install dependencies:
-	*.NET 8 SDK if not using a release build
-	*Install Git (optional)
-	*Powershell, CMD for VS, or VS (Linux use not currently supported, but it may still work)
-*Clone:
-'''
+*Install dependencies:<br />
+	*.NET 8 SDK if not using a release build<br />
+	*Install Git (optional)<br />
+	*Powershell, CMD for VS, or VS (Linux use not currently supported, but it may still work)<br />
+*Clone:<br />
+```
 git clone https://github.com/TPi-Home/Budget.git
 cd Budget
-'''
-*Build:
-Right click inside the Budget root directory, open with terminal.
+```
+*Build:<br />
+Right click inside the Budget root directory, open with terminal.<br />
 
 **********************************************************************
 **Features Pending:**<br />
