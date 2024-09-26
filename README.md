@@ -42,6 +42,7 @@ Contributions are very welcome! Feel free to fork the repository and create a PR
 * Options for different income types when the income sheet is more fleshed out (W-2, 1099, 1040, etc.) <br />
 * Options for savings<br />
 * Reminders for tax season (eg healthcare.gov tax forms)<br />
+* Office.Interop
 ### Please send any suggestions to me directly if you know me. If not, I can be contacted via email from this website: <br />
 https://www.tpittman.dev/home
 ## **Known Bugs:** <br />
