@@ -50,7 +50,7 @@ namespace BudgetSpreadsheet
                     case "4":
                         //finalize
                         WSAppend.FinalizeCurrentSheet(workbookFileName, existingBills);
-                        break;
+                        break;//case 5 encrypt
                     case "5":
                         Tutorial();
                         break;//possibly add table themes here
@@ -69,7 +69,7 @@ namespace BudgetSpreadsheet
                 //check for open file
                 //sql for storing in program
                 //need to add actual budget portion in addition to expense trackings
-                //ensure dependencies use MIT license
+                //ensure dependencies use MIT license for base program, encryption can be modified later
             }
         }
         static void Tutorial()//will probably add some modularity here when I work on the gui
