@@ -24,10 +24,12 @@ namespace Budget
                     Console.WriteLine("The worksheet is empty.");
                     return;
                 }
+                //determine cell bg colors
                 var headerColor = XLColor.Black;
-                var bodyColor = XLColor.FromHtml("#a27ddd");
+                var bodyColor = XLColor.FromHtml("#d19ffc");
                 var weekRowColor = XLColor.FromHtml("#4f1c75");
                 var range = currentSheet.Range(firstCell.Address, lastCell.Address);
+
                 if (range == null)
                 {
                     Console.WriteLine("Failed to determine the range.");
@@ -55,6 +57,7 @@ namespace Budget
                     string cellValue = currentSheet.Cell(row, 1).GetString();
                     if (cellValue.StartsWith("Week ") || cellValue.StartsWith("Total"))
                     {
+                        //if it's a divider row:
                         for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
                         {
                             currentSheet.Cell(row, col).Style.Fill.BackgroundColor = weekRowColor;
@@ -64,20 +67,23 @@ namespace Budget
                             currentSheet.Cell(row, col).Style.Border.SetRightBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetBottomBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetLeftBorder(XLBorderStyleValues.Medium);
+                            currentSheet.Cell(row, col).Style.Font.Bold = true;
                         }
                     }
+                    //else it's a body row:
                     else
                     {
                         for (int col = 1; col <= currentSheet.LastColumnUsed().ColumnNumber(); col++)
                         {
                             currentSheet.Cell(row, col).Style.Fill.BackgroundColor = bodyColor;
-                            currentSheet.Cell(row, col).Style.Font.FontColor = XLColor.Black; //if cell col 1 row x, write as bold
+                            currentSheet.Cell(row, col).Style.Font.FontColor = XLColor.Black;
                             //border:
                             currentSheet.Cell(row, col).Style.Border.SetTopBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetRightBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetBottomBorder(XLBorderStyleValues.Medium);
                             currentSheet.Cell(row, col).Style.Border.SetLeftBorder(XLBorderStyleValues.Medium);
-
+                            if (col == 1)
+                                currentSheet.Cell(row, col).Style.Font.Bold = true;
                         }
                     }
                 }

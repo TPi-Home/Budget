@@ -2,6 +2,20 @@
 **********************************************************************
 This is the software I am building to automate my budget and expense spreadsheets. Included on the (pre)release page is a template of the spreadsheet I am modeling this after.
 **********************************************************************
+**How To Use This Software:**<br />
+*Install dependencies:
+	*.NET 8 SDK if not using a release build
+	*Install Git (optional)
+	*Powershell, CMD for VS, or VS (Linux use not currently supported, but it may still work)
+*Clone:
+'''
+git clone https://github.com/TPi-Home/Budget.git
+cd Budget
+'''
+*Build:
+Right click inside the Budget root directory, open with terminal.
+
+**********************************************************************
 **Features Pending:**<br />
 *Add a bool isSplit column for totaling bills to reduce warnings from Excel regarding consistency of formulas
 *Add an option to change the colors of the spreadsheet theme <br />
