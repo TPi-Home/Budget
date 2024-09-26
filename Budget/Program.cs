@@ -41,10 +41,10 @@ namespace BudgetSpreadsheet
                         //var worksheet = workbook.Worksheet(currentSheet);
                         var tableTheme = new TableTheme();
 
-                        // Apply header theme
+                        //apply header theme
                         TableTheme.applyHeaders(workbookFileName);
 
-                        // Apply full theme
+                        //apply full theme
                         tableTheme.applyTheme(workbookFileName);
                         break;
                     case "4":
@@ -64,12 +64,6 @@ namespace BudgetSpreadsheet
                         Console.WriteLine("Invalid choice.");
                         break;
                 }
-                //break up rent and mortgage, taxes (plus adjusting applicable bills to tax rate, prob seperate column), seperate insurance types, subscription audit, income and capital gains, 1099 income, savings info, debt payments, cells for tax season reminders
-                //add delete expensese
-                //check for open file
-                //sql for storing in program
-                //need to add actual budget portion in addition to expense trackings
-                //ensure dependencies use MIT license for base program, encryption can be modified later
             }
         }
         static void Tutorial()//will probably add some modularity here when I work on the gui

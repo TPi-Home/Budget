@@ -98,6 +98,7 @@ namespace Budget
             {
                 var currentSheet = workbook.Worksheets.FirstOrDefault();
                 //formatting headers
+                //these should be variables in case of user defined columns 
                 currentSheet.Cell("A1").Value = "Bill Name";
                 currentSheet.Cell("B1").Value = "Minimum Amount Owed";
                 currentSheet.Cell("C1").Value = "Minimum Amount Due";
