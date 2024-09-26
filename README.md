@@ -43,6 +43,10 @@ Contributions are very welcome! Feel free to fork the repository and create a PR
 * Options for savings<br />
 * Reminders for tax season (eg healthcare.gov tax forms)<br />
 * Office.Interop
+* Option to delete an entry
+* Add options to break early while data gathering
+* Option to add columns
+* Option to enter new formulas 
 ### Please send any suggestions to me directly if you know me. If not, I can be contacted via email from this website: <br />
 https://www.tpittman.dev/home
 ## **Known Bugs:** <br />
