@@ -7,6 +7,8 @@ namespace Budget
     {
         public static void AddBillsToCurrentSheet(string workbookFileName, Dictionary<int, List<(string billName, decimal amount, bool isSplit, string autopayStatus)>> existingBills)
         {
+            //need to check for workbook here 
+
             using (var workbook = new XLWorkbook(workbookFileName))
             {
                 var currentSheet = workbook.Worksheets.FirstOrDefault();
