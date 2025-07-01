@@ -50,5 +50,5 @@ Contributions are very welcome! Feel free to fork the repository and create a PR
 ### Please send any suggestions to me directly if you know me. If not, I can be contacted via email from this website: <br />
 https://www.tpittman.dev/home
 ## **Known Bugs:** <br />
-Currently none. 
+Currently none, but there are some redundant functions performed and this could be optimized. 
 
